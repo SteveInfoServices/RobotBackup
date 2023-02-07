@@ -1,0 +1,169 @@
+
+;==================================================
+;robobkup.au3
+;compile with AutoIt
+;Modified by Steveinfisevices.free.fr
+;==================================================
+$g_szVersion = "RoboBkup SteveInfoservices"
+If WinExists($g_szVersion) Then Exit
+AutoItWinSetTitle($g_szVersion)
+AutoItSetOption("RunErrorsFatal", 0)
+AutoItSetOption("ExpandEnvStrings", 1)
+AutoItSetOption("TrayIconHide", 1)
+Dim $backupfolder, $file
+;==================================================
+; If  @OSVersion =  "WIN_XP" Or @OSVersion = "WIN_7" Or @OSVersion = "WIN_10" Or @OSVersion = "WIN_11" Then
+
+
+#include <GuiConstants.au3>
+
+
+  GUICreate("RoboBkup Steveinfoservices v5.2", 481, 269, (@DesktopWidth - 381) / 2, (@DesktopHeight - 169) / 2, $WS_OVERLAPPEDWINDOW + $WS_VISIBLE + $WS_CLIPSIBLINGS)
+  $font = "Arial Bold"
+  GUISetFont(12, 600, "", $font)
+  $Button_1 = GUICtrlCreateButton("Folder Backup", 20, 60, 120, 40)
+  $Button_2 = GUICtrlCreateButton("Backup", 140, 60, 90, 40)
+  $Button_3 = GUICtrlCreateButton("Folder Restore", 230, 60, 140, 40)
+  $Button_4 = GUICtrlCreateButton("Restore", 370, 60, 100, 40)
+  $Button_5 = GUICtrlCreateButton("Quit", 180, 120, 100, 30)
+  $Label_4 = GUICtrlCreateLabel("RoboCopy Backup and Restore", 18, 4, 290, 40)
+  $Label_5 = GUICtrlCreateLabel("_____________________________________________", 18, 26, 480, 30)
+  GUISetState()
+  While 1
+    $msg = GUIGetMsg()
+    Select
+
+
+	   Case $msg = $Button_1
+
+
+
+    ; Ouvre une boîte de dialogue pour sélectionner un dossier.
+    ; While 1
+     $backupfolder = InputBox("Select Backup Drive", "Enter the backup drive letter.", ""," M1", "*")
+     If @error = 1 Then
+     MsgBox(0, "User Cancelled", "User cancelled, Exiting Program", 3)
+       Exit
+      EndIf
+     ; $file = FileOpen($backupfolder & ':\text.txt', 1)
+    ; If $file = -1 Or StringUpper($backupfolder) = "C" Then
+    ;  MsgBox(0, "Error", "You must select a writable drive (other than drive C).")
+    ;  Else
+    ;  FileClose($file)
+    ;  FileDelete($file)
+    ;  ExitLoop
+    ;  EndIf
+    ;  WEnd
+
+
+
+      Case $msg = $Button_2
+
+
+		 If ($backupfolder = "") Then
+    MsgBox(0, "Error", "Please select 'Folder Backup' before.")
+	Exit
+    EndIf
+
+
+	    RunWait('robocopy "' & @UserProfileDir & '\Desktop"' & ' "' & $backupfolder & ":\" & @ComputerName & " backup" & '\Desktop" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+        RunWait('robocopy "' & @UserProfileDir & '\Favorites"' & ' "' & $backupfolder & ":\" & @ComputerName & " backup" & '\Favorites" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+        RunWait('robocopy "' & @UserProfileDir & '\Documents"' & ' "' & $backupfolder & ":\" & @ComputerName & " backup" & '\Documents" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+		RunWait('robocopy "' & @UserProfileDir & '\Downloads"' & ' "' & $backupfolder & ":\" & @ComputerName  & " backup" & '\Downloads" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+		RunWait('robocopy "' & @UserProfileDir & '\Pictures"' & ' "' & $backupfolder & ":\" & @ComputerName  & " backup" & '\Pictures" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+		RunWait('robocopy "' & @UserProfileDir & '\Music"' & ' "' & $backupfolder & ":\" & @ComputerName  & " backup" & '\Music" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+
+		;Verif Chrome
+		Local $iFilechrome = "C:\users\%username%\AppData\Local\Google\Chrome"
+		; Affiche si le fichier existe ou pas.
+    If $iFilechrome Then
+        RunWait('robocopy "' & @UserProfileDir & '\AppData\Local\Google\Chrome"' & ' "' & $backupfolder & ":\" & @ComputerName  & " backup" & '\Chrome" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+    Else
+        MsgBox($MB_SYSTEMMODAL, "", "Le fichier n'existe pas." & @CRLF & "FileExist a retourné: " & $iFilechrome)
+	 EndIf
+
+	    ;Verif Chrome
+
+
+		;Verif Firefox
+		Local $iFilefirefox = "C:\users\%username%\AppData\Roaming\Mozilla\Firefox"
+		; Affiche si le fichier existe ou pas.
+    If $iFilefirefox Then
+        RunWait('robocopy "' & @UserProfileDir & '\AppData\Roaming\Mozilla\Firefox"' & ' "' & $backupfolder & ":\" & @ComputerName  & " backup" & '\Firefox" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+    Else
+        MsgBox($MB_SYSTEMMODAL, "", "Le fichier n'existe pas." & @CRLF & "FileExist a retourné: " & $iFilefirefox )
+	 EndIf
+
+	    ;Verif Firefox
+
+
+
+
+
+        MsgBox(0, "Job Status", "Backup Done ...", 2)
+        FileDelete($file)
+
+		Case $msg = $Button_3
+
+		 Local $sMessage = "Choisissez un dossier"
+
+    ; Ouvre une boîte de dialogue pour sélectionner un dossier.
+    Local $sFileSelectFolder = FileSelectFolder($sMessage, "")
+
+
+
+
+
+
+      Case $msg = $Button_4
+        RunWait('robocopy "' & $sFileSelectFolder & '\Desktop"' & ' "' & @UserProfileDir & '\Desktop" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+        RunWait('robocopy "' & $sFileSelectFolder & '\Favorites"' & ' "' & @UserProfileDir & '\Favorites" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+        RunWait('robocopy "' & $sFileSelectFolder & '\Documents"' & ' "' & @UserProfileDir & '\Documents" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+		RunWait('robocopy "' & $sFileSelectFolder & '\Downloads"' & ' "' & @UserProfileDir & '\Downloads" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+		RunWait('robocopy "' & $sFileSelectFolder & '\Pictures"' & ' "' & @UserProfileDir & '\Pictures" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+		RunWait('robocopy "' & $sFileSelectFolder & '\Music"' & ' "' & @UserProfileDir & '\Music" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+
+		;Verif Chrome
+		Local $iBackupchrome =  $sFileSelectFolder & '\Chrome"'
+		; Affiche si le fichier existe ou pas.
+    If $iBackupchrome Then
+        RunWait('robocopy "' & $sFileSelectFolder & '\Chrome"' & ' "' & @UserProfileDir & '\AppData\Local\Google\Chrome" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+    Else
+        MsgBox($MB_SYSTEMMODAL, "", "Le fichier n'existe pas." & @CRLF & "FileExist a retourné: " & $iBackupchrome)
+    EndIf
+        ;Verif Chrome
+
+		;Verif Firefox
+		Local $iBackupfirefox =  $sFileSelectFolder & '\Firefox"'
+		; Affiche si le fichier existe ou pas.
+    If $iBackupfirefox  Then
+        RunWait('robocopy "' & $sFileSelectFolder & '\Firefox"' & ' "' & @UserProfileDir & '\AppData\Roaming\Mozilla\Firefox" /S /E /R:0 /W:0', "", @SW_SHOWNORMAL)
+    Else
+        MsgBox($MB_SYSTEMMODAL, "", "Le fichier n'existe pas." & @CRLF & "FileExist a retourné: " & $iBackupfirefox )
+    EndIf
+        ;Verif Firefox
+
+
+
+
+
+
+
+
+
+        MsgBox(0, "Job Status", "Restore Done ...", 2)
+        FileDelete($file)
+      Case $msg = $Button_5
+        Exit
+      Case $msg = $GUI_EVENT_CLOSE
+        ExitLoop
+      Case Else
+        ;;;
+    EndSelect
+  WEnd
+  Exit
+ ; Else
+; MsgBox(0, "Error", "You must be running Windows 2000 or higher to use this utility")
+  ; Exit
+; EndIf
+;==================================================
