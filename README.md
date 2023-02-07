@@ -3,13 +3,8 @@ Outils pour le Techncien informatique, pour sauvegarder les documents d'un PC en
 
 
 
+steveinfoservices.free.fr
 
-******************************
-*        ChangeLog           *
-* steveinfoservices@free.fr  *
-*                            *
-*                            *
-******************************
 
 
 
