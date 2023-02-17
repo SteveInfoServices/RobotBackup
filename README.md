@@ -4,6 +4,7 @@ Outils pour le Techncien informatique, pour sauvegarder les documents d'un PC en
 
 
 
+![RobotBackup](http://steveinfoservices.free.fr/robot/robot.png)
 
 
 
